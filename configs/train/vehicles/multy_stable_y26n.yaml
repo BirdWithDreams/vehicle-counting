@@ -1,0 +1,14 @@
+inherits: train/multi_base.yaml
+name: multy_prod_y26n
+
+imgsz: 640
+batch: 16
+epochs: 220
+patience: 35
+close_mosaic: 15
+
+optimizer: AdamW
+lr0: 0.002
+cos_lr: true
+weight_decay: 0.0005
+iou: 0.7

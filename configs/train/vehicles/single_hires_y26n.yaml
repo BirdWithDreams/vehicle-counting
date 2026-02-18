@@ -1,0 +1,5 @@
+inherits: train/single_base.yaml
+name: single_hires_y26n
+
+imgsz: 960
+batch: 8

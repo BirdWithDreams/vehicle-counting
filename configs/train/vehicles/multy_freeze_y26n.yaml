@@ -1,0 +1,7 @@
+inherits: train/multi_base.yaml
+name: multy_freeze_y26n
+
+imgsz: 640
+batch: 16
+freeze: 10
+epochs: 120

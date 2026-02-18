@@ -1,0 +1,6 @@
+inherits: train/multi_base.yaml
+name: multy_baseline_y26n
+
+imgsz: 640
+batch: 16
+epochs: 120

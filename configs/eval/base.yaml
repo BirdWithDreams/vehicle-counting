@@ -1,0 +1,5 @@
+imgsz: 640
+conf: 0.20
+iou: 0.60
+max_det: 300
+split: test

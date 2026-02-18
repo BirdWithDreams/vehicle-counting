@@ -1,0 +1,7 @@
+inherits: eval/base.yaml
+# counting-specific
+counting:
+  # if 5-class model, optionally merge all classes into "vehicle" for counting evaluation
+  merge_to_vehicle: true
+  # matching threshold for counting (how you decide TP/FP for count):
+  match_iou: 0.50

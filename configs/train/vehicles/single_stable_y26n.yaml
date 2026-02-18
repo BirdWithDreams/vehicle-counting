@@ -1,0 +1,13 @@
+inherits: train/single_base.yaml
+name: single_stable_y26n
+
+imgsz: 640
+batch: 16
+epochs: 200
+patience: 30
+close_mosaic: 10
+
+optimizer: AdamW
+lr0: 0.002
+cos_lr: true
+weight_decay: 0.0005

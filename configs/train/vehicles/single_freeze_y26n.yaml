@@ -1,0 +1,7 @@
+inherits: train/single_base.yaml
+name: single_freeze_y26n
+
+imgsz: 640
+batch: 16
+freeze: 10
+epochs: 60

@@ -1,0 +1,7 @@
+sort_by: counting_mae
+include:
+  - map50
+  - map50_95
+  - counting_mae
+  - counting_rmse
+  - counting_mape

@@ -1,0 +1,9 @@
+inherits: train/multi_base.yaml
+name: multy_imbalance_y26n
+
+imgsz: 640
+batch: 16
+epochs: 160
+
+fl_gamma: 1.5
+cls: 0.7

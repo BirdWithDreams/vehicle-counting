@@ -1,0 +1,13 @@
+project_name: VehicleCountingModel
+seed: 42
+device: "cuda"  # or "cpu"
+workers: 4
+cache: true
+comet:
+  enabled: true
+  # set COMET_API_KEY in .env
+  workspace: null   # optional
+  project: VehicleCountingModel
+paths:
+  artifacts_dir: artifacts
+  runs_dir: runs

@@ -1,0 +1,38 @@
+model: yolo26n.pt
+data: ./data/data.yaml
+
+epochs: 50
+imgsz: 640
+batch: 16
+patience: 25
+
+optimizer: AdamW
+lr0: 0.003
+lrf: 0.01
+weight_decay: 0.01
+warmup_epochs: 3
+cos_lr: true
+
+# augmentation
+mosaic: 0.7
+mixup: 0.1
+close_mosaic: 10
+scale: 0.5
+translate: 0.1
+degrees: 5
+shear: 2
+perspective: 0.0005
+hsv_h: 0.015
+hsv_s: 0.7
+hsv_v: 0.4
+fliplr: 0.5
+flipud: 0.0
+
+# runtime
+amp: true
+deterministic: true
+save: true
+save_period: 10
+val: true
+
+single_cls: False
