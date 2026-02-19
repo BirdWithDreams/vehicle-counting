@@ -25,6 +25,9 @@ VehicleCountingModel/
   - **Input**: Metrics from `artifacts/experiments/evals`.
   - **Output**: `artifacts/leaderboards/leaderboard.md` and `.csv`.
 - **`run_sequence.py`**: Utility to run multiple training configurations sequentially.
+  - Supports `--include` to explicitly select configs and `--skip` to exclude them.
+  - Logic: `selected = set(include) - set(skip)`.
+  - Example: `python run_sequence.py --include single_baseline_y26n --skip single_aug_y26n`
 
 ### Run Scripts (`run.ps1` / `run.sh`)
 
@@ -38,6 +41,7 @@ Available commands:
 - **`train_multy`**: Runs only multi-class configs (`multy*.yaml`).
 - **`eval`**: Evaluates all models in `runs/detect/VehicleCountingModel`.
 - **`compare`**: Generates the leaderboard from evaluation results.
+
 
 ## Configs Explanation (`configs/train/vehicles`)
 
@@ -53,12 +57,12 @@ Available commands:
 | model_id             | task     |    map50 |   map50_95 |   counting_mae |   counting_rmse |   counting_mape | weights                                                               |
 |:---------------------|:---------|---------:|-----------:|---------------:|----------------:|----------------:|:----------------------------------------------------------------------|
 | multy_prod_y26n      | Multiple | 0.764472 |   0.57275  |        1.53968 |         1.93136 |         1.53968 | runs\detect\VehicleCountingModel\multy_prod_y26n\weights\best.pt      |
-| single_freeze_y26n   | Single   | 0.726347 |   0.52149  |        1.68254 |         2.1157  |         1.68254 | runs\detect\VehicleCountingModel\single_freeze_y26n\weights\best.pt   |
 | single_stable_y26n   | Single   | 0.775779 |   0.55261  |        1.68254 |         2.10064 |         1.68254 | runs\detect\VehicleCountingModel\single_stable_y26n\weights\best.pt   |
-| multy_freeze_y26n    | Multiple | 0.777155 |   0.578014 |        1.71429 |         2.31626 |         1.71429 | runs\detect\VehicleCountingModel\multy_freeze_y26n\weights\best.pt    |
 | multy_baseline_y26n  | Multiple | 0.777155 |   0.578014 |        1.71429 |         2.31626 |         1.71429 | runs\detect\VehicleCountingModel\multy_baseline_y26n\weights\best.pt  |
+| single_freeze_y26n   | Single   | 0.706583 |   0.552867 |        1.73016 |         2.29907 |         1.73016 | runs\detect\VehicleCountingModel\single_freeze_y26n\weights\best.pt   |
 | single_hires_y26n    | Single   | 0.640864 |   0.449799 |        1.73016 |         2.32652 |         1.73016 | runs\detect\VehicleCountingModel\single_hires_y26n\weights\best.pt    |
 | single_aug_y26n      | Single   | 0.774641 |   0.57017  |        1.87302 |         2.34352 |         1.87302 | runs\detect\VehicleCountingModel\single_aug_y26n\weights\best.pt      |
+| multy_freeze_y26n    | Multiple | 0.763698 |   0.569126 |        1.93651 |         2.31626 |         1.93651 | runs\detect\VehicleCountingModel\multy_freeze_y26n\weights\best.pt    |
 | single_baseline_y26n | Single   | 0.72443  |   0.536141 |        2.03175 |         2.55107 |         2.03175 | runs\detect\VehicleCountingModel\single_baseline_y26n\weights\best.pt |
 | multy_imbalance_y26n | Multiple | 0.696639 |   0.491176 |        2.25397 |         3.10657 |         2.25397 | runs\detect\VehicleCountingModel\multy_imbalance_y26n\weights\best.pt |
 
@@ -67,6 +71,25 @@ Available commands:
 - **`single_aug_y26n`** demonstrates that heavy augmentation significantly improves performance over the baseline (~0.77 vs 0.72 mAP), suggesting better generalization.
 - **`single_hires_y26n`** performed worse than expected, possibly due to the smaller batch size required by higher resolution or optimization difficulties.
 - **`single_freeze_y26n`** offers stable performance, slightly lower than full training, but establishes a solid baseline with less computational cost.
+
+## Running Inference
+
+Run YOLO with the best model weights using the following command template:
+
+```
+yolo TASK MODE ARGS
+```
+
+Example (using `multy_prod_y26n`):
+
+```bash
+yolo detect predict \
+    model=runs/detect/VehicleCountingModel/multy_prod_y26n/weights/best.pt \
+    source=path/to/image.jpg \
+    conf=0.20 \
+    iou=0.60 \
+    imgsz=640
+```
 
 ## Metrics Explanation
 

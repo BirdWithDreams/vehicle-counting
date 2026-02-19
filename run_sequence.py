@@ -8,9 +8,10 @@ from dotenv import load_dotenv
 @click.option("--configs-dir", default="configs/train/vehicles", help="Directory containing train configs", show_default=True)
 @click.option("--project", default="configs/project.yaml", help="Path to project config", show_default=True)
 @click.option("--continue-on-error", is_flag=True, help="Continue to next config if one fails")
-@click.option("--skip", multiple=True, help="Config names to skip")
+@click.option("--skip", multiple=True, help="Config names (with or without extension) to skip")
+@click.option("--include", multiple=True, help="Config names (with or without extension) to explicitly include. If provided, only these will be run (minus skipped).")
 @click.option("--pattern", default="*.yaml", help="Glob pattern for config files", show_default=True)
-def main(configs_dir, project, continue_on_error, skip, pattern):
+def main(configs_dir, project, continue_on_error, skip, include, pattern):
     load_dotenv()
     
     config_path = Path(configs_dir)
@@ -19,22 +20,47 @@ def main(configs_dir, project, continue_on_error, skip, pattern):
         sys.exit(1)
 
     # Get all .yaml files in the directory
-    configs = sorted(list(config_path.glob(pattern)))
+    all_configs = sorted(list(config_path.glob(pattern)))
     
-    if not configs:
+    if not all_configs:
         click.echo(f"No YAML files found in {configs_dir}")
         sys.exit(0)
 
-    click.echo(f"Found {len(configs)} configurations to run.")
+    # Normalize sets for filtering (support both 'name.yaml' and 'name')
+    def get_names(p: Path):
+        return {p.name, p.stem}
+
+    skip_set = set(skip)
+    include_set = set(include)
+
+    configs_to_run = []
+    
+    for cfg in all_configs:
+        cfg_names = get_names(cfg)
+        
+        # specific include filter
+        if include_set:
+            if not (cfg_names & include_set):
+                continue
+
+        # skip filter
+        if cfg_names & skip_set:
+             click.echo(f"Skipping {cfg.name} as requested.")
+             continue
+             
+        configs_to_run.append(cfg)
+
+    if not configs_to_run:
+        click.echo("No configurations to run after filtering.")
+        sys.exit(0)
+
+    click.echo(f"Found {len(configs_to_run)} configurations to run.")
     
     failed_configs = []
 
-    for i, cfg in enumerate(configs, 1):
-        if cfg.name in skip or cfg.stem in skip:
-            click.echo(f"Skipping {cfg.name} as requested.")
-            continue
+    for i, cfg in enumerate(configs_to_run, 1):
             
-        click.echo(f"\n[{i}/{len(configs)}] Running config: {cfg.name}")
+        click.echo(f"\n[{i}/{len(configs_to_run)}] Running config: {cfg.name}")
         
         # Determine data config based on filename convention or content
         # Simplistic approach: parse YAML to find 'data' key, or infer from name

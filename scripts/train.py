@@ -48,6 +48,7 @@ def main(project, train):
         patience=train_cfg["patience"],
         optimizer=train_cfg["optimizer"],
         lr0=train_cfg["lr0"],
+        freeze=train_cfg.get("freeze"),
         lrf=train_cfg["lrf"],
         weight_decay=train_cfg["weight_decay"],
         warmup_epochs=train_cfg["warmup_epochs"],
