@@ -5,5 +5,4 @@ imgsz: 640
 batch: 16
 epochs: 160
 
-fl_gamma: 1.5
 cls: 0.7
